@@ -8,7 +8,7 @@ const template = document.createElement('template');
 template.innerHTML = `
   <style>
     h2 {
-      color: orangered;
+      color: var(--digital-clock-color, orangered);
     }
   </style>
 
@@ -35,8 +35,7 @@ class DigitalClock extends HTMLElement {
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
-  
-      // this.innerHTML = `<span>${hours} : ${minutes} : ${seconds}</span>`;
+
       this.shadowRoot.querySelector('h2').textContent = `${hours} : ${minutes} : ${seconds}`;
     }, 1000);
     
