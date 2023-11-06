@@ -45,7 +45,16 @@
         image.src = this.src;
 
         this.appendChild(clone);
+      }
 
+      static get observedAttributes() {
+        return ['src'];
+      }
+
+      attributeChangedCallback(attributeName, oldValue, newValue) {
+        if (attributeName === 'src') {
+          this.querySelector('img').src = newValue;
+        }
       }
 
     }
