@@ -3,29 +3,45 @@
   2- Each second, we must calculate the time and update the component HTML
 */
 
+const template = document.createElement('template');
+
+template.innerHTML = `
+  <style>
+    h2 {
+      color: orangered;
+    }
+  </style>
+
+  <h2></h2>
+`;
+
+
 class DigitalClock extends HTMLElement {
   
-    constructor() {
-      super();
+  constructor() {
+    super();
 
-      this.attachShadow({ mode: 'open' });
-    }
-  
-    connectedCallback() {
-      console.log('connectedCalback');
-  
-      setInterval(() => {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const seconds = now.getSeconds();
-    
-        // this.innerHTML = `<span>${hours} : ${minutes} : ${seconds}</span>`;
-        this.shadowRoot.innerHTML = `<h2>${hours} : ${minutes} : ${seconds}</h2>`;
-      }, 1000);
-      
-    }
+    this.attachShadow({ mode: 'open' });
   }
+
+  connectedCallback() {
+    
+    const templateClone = template.content.cloneNode(true);
+
+    this.shadowRoot.appendChild(templateClone);
+
+    setInterval(() => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+  
+      // this.innerHTML = `<span>${hours} : ${minutes} : ${seconds}</span>`;
+      this.shadowRoot.querySelector('h2').textContent = `${hours} : ${minutes} : ${seconds}`;
+    }, 1000);
+    
+  }
+}
   
   window.customElements.define('digital-clock', DigitalClock);
   
