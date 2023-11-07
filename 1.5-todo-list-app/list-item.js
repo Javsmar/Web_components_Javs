@@ -49,6 +49,8 @@ class ListItem extends HTMLElement {
 
     const button = this.shadowRoot.querySelector('button');
     button.addEventListener('click', () => {
+      const event = new CustomEvent("onItemRemoved");
+      this.dispatchEvent(event);
       this.remove();
     })
   }
