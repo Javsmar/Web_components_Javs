@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      :root {
+        --custom-input-button-color: red;
+      }
+    </style>
+</head>
+<body>
+  <custom-input id="default"></custom-input>
+
+  <custom-input id="custom" type="number" placeholder="escribe algo que tengas que hacer" buttonLabel="+"></custom-input>
+
+  <script type="module" src="./custom-input.js"></script>
+
+  <script>
+    const customInputDefault = document.querySelector('#default');
+    customInputDefault.addEventListener("submit", (event) => {
+      console.log(event.detail);
+    })
+
+    const customInput = document.querySelector('#custom');
+    customInput.addEventListener("submit", (event) => {
+      console.log(event.detail);
+    })
+  </script>
+</body>
+</html>
