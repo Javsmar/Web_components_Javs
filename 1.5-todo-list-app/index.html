@@ -4,34 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-      :root {
-        --custom-input-button-color: red;
-      }
-    </style>
 </head>
 <body>
-  <custom-input id="default"></custom-input>
 
-  <custom-input id="custom" type="number" placeholder="escribe algo que tengas que hacer" buttonLabel="+"></custom-input>
+  <todo-app></todo-app>
 
-  <list-item></list-item>
-  <list-item content="hacer la compra"></list-item>
-  <list-item content="hacer cena" buttonLabel="Borrar"></list-item>
-
-  <script type="module" src="./custom-input.js"></script>
-  <script type="module" src="./list-item.js"></script>
-
-  <script>
-    const customInputDefault = document.querySelector('#default');
-    customInputDefault.addEventListener("submit", (event) => {
-      console.log(event.detail);
-    })
-
-    const customInput = document.querySelector('#custom');
-    customInput.addEventListener("submit", (event) => {
-      console.log(event.detail);
-    })
-  </script>
+  <script type="module" src="./todo-app.js"></script>
 </body>
 </html>
