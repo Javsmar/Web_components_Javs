@@ -29,6 +29,7 @@ templateElement.innerHTML = `
 </style>
 
 <div class="todo-app-wrapper">
+  <span class="counter">0</span>
   <custom-input></custom-input>
   <div class="todo-list"></div>
 </div>
@@ -40,6 +41,7 @@ class TodoApp extends HTMLElement {
     super();
 
     this.attachShadow({ mode: "open" });
+    this.counter = 0;
   }
 
   connectedCallback() {
@@ -53,10 +55,18 @@ class TodoApp extends HTMLElement {
   }
 
   addTodo(todo) {
+    const counter = this.shadowRoot.querySelector('.counter');
+    counter.textContent = ++this.counter;
+
     const todoList = this.shadowRoot.querySelector('.todo-list');
     const newDiv = document.createElement('div');
     newDiv.innerHTML = `<list-item content="${todo}"></list-item>`;
 
+    const listItem = newDiv.querySelector('list-item');
+    listItem.addEventListener('onItemRemoved', () => {
+      counter.textContent = --this.counter;
+    })
+  
     todoList.appendChild(newDiv);
   }
 
