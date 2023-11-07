@@ -25,7 +25,8 @@ templateElement.innerHTML = `
 </style>
 
 <div class="list-item-wrapper">
-  <span>keepcoding component boilerplate</span>
+  <span></span>
+  <button></button>
 </div>
 
 `;
@@ -35,11 +36,21 @@ class ListItem extends HTMLElement {
     super();
 
     this.attachShadow({ mode: "open" });
+    this.content = this.getAttribute('content') || 'Estudiar programación';
+    this.buttonLabel = this.getAttribute('buttonLabel') || '❌';
   }
 
   connectedCallback() {
     const template = templateElement.content.cloneNode(true);
+    template.querySelector('span').textContent = this.content;
+    template.querySelector('button').textContent = this.buttonLabel;
+
     this.shadowRoot.appendChild(template);
+
+    const button = this.shadowRoot.querySelector('button');
+    button.addEventListener('click', () => {
+      this.remove();
+    })
   }
 }
 
