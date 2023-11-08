@@ -60,9 +60,8 @@ class TodoApp extends HTMLElement {
 
   addTodo(todo) {
     const id = Date.now().toString();
-    this.todos.push({content: todo, id: id});
-    const counter = this.shadowRoot.querySelector('.counter');
-    counter.textContent = ++this.counter;
+    this.todos.push({content: todo, id: id, isCompleted: false });
+    this.incrementCounter()
 
     this.addListItem({content: todo, id: id});
     
@@ -79,10 +78,26 @@ class TodoApp extends HTMLElement {
     newDiv.innerHTML = `<list-item id="${todo.id}" content="${todo.content}"></list-item>`;
 
     const listItem = newDiv.querySelector('list-item');
+    
     listItem.addEventListener('onItemRemoved', (event) => {
-      const counter = this.shadowRoot.querySelector('.counter');
-      counter.textContent = --this.counter;
+      const currentTodo = this.getTodoById(event.detail);
+      if (!currentTodo.isCompleted) {
+        this.decreaseCounter();
+      }
       this.todos = this.todos.filter(todo => todo.id !== event.detail);
+      this.saveTodosInLocalstorage(this.todos);
+    });
+
+    listItem.addEventListener("onItemCompleted", (event) => {
+      const currentTodo = this.getTodoById(event.detail.id)
+      currentTodo.isCompleted = event.detail.checked;
+      
+      if (event.detail.checked) {
+        this.decreaseCounter();
+      } else {
+        this.incrementCounter();
+      }
+
       this.saveTodosInLocalstorage(this.todos);
     })
 
@@ -102,6 +117,21 @@ class TodoApp extends HTMLElement {
     }
 
     return todos;
+  }
+
+  incrementCounter() {
+    const counter = this.shadowRoot.querySelector('.counter');
+    counter.textContent = ++this.counter;
+  }
+
+  decreaseCounter() {
+    const counter = this.shadowRoot.querySelector('.counter');
+    counter.textContent = this.counter === 0 ? this.counter : --this.counter;
+  }
+
+  getTodoById(id) {
+    const index = this.todos.findIndex(todo => todo.id === id);
+    return this.todos[index];
   }
 
 }

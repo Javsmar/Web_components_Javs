@@ -21,10 +21,14 @@ const templateElement = document.createElement("template");
 templateElement.innerHTML = `
 <style>
 
+.list-item-wrapper.checked span {
+  text-decoration: line-through;
+}
 
 </style>
 
 <div class="list-item-wrapper">
+  <input type="checkbox">
   <span></span>
   <button></button>
 </div>
@@ -48,6 +52,11 @@ class ListItem extends HTMLElement {
 
     this.shadowRoot.appendChild(template);
 
+    this.handleDeleteClick();
+    this.handleCheckboxChange();
+  }
+
+  handleDeleteClick() {
     const button = this.shadowRoot.querySelector('button');
     button.addEventListener('click', () => {
       const event = new CustomEvent("onItemRemoved", {
@@ -55,6 +64,26 @@ class ListItem extends HTMLElement {
       });
       this.dispatchEvent(event);
       this.remove();
+    })
+  }
+
+  handleCheckboxChange() {
+    const checkbox = this.shadowRoot.querySelector('input');
+    checkbox.addEventListener('change', (event) => {
+      const itemWrapper = this.shadowRoot.querySelector('.list-item-wrapper');
+      if (event.target.checked) {
+        itemWrapper.classList.add('checked');
+      } else {
+        itemWrapper.classList.remove('checked');
+      }
+      const completedEvent = new CustomEvent("onItemCompleted", {
+        detail: {
+          checked: event.target.checked,
+          id: this.id
+        }
+      });
+
+      this.dispatchEvent(completedEvent);
     })
   }
 }
