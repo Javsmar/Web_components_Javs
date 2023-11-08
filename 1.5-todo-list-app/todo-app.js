@@ -41,7 +41,7 @@ class TodoApp extends HTMLElement {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.todos = this.getTodos();
+    this.todos = this.getTodosFromLocalstorage();
     this.counter = this.todos.length;
   }
 
@@ -59,46 +59,49 @@ class TodoApp extends HTMLElement {
   }
 
   addTodo(todo) {
-    this.todos.push(todo);
+    const id = Date.now().toString();
+    this.todos.push({content: todo, id: id});
     const counter = this.shadowRoot.querySelector('.counter');
     counter.textContent = ++this.counter;
 
-    this.addListItem(todo);
+    this.addListItem({content: todo, id: id});
     
-    localStorage.setItem('todos', this.todos);
-  }
-
-  getTodos() {
-    const todosAsString = localStorage.getItem("todos");
-    let todos = [];
-
-    if (todosAsString) {
-      todos = todosAsString.split(',');
-    }
-
-    return todos;
-
-    // return todosAsString ? todosAsString.split(',') : [];
+    this.saveTodosInLocalstorage(this.todos);
   }
 
   drawPendingTodos() {
-    this.todos.forEach(todo => { this.addListItem (todo)});
+    this.todos.forEach(todo => { this.addListItem(todo)});
   }
 
   addListItem(todo) {
     const todoList = this.shadowRoot.querySelector('.todo-list');
     const newDiv = document.createElement('div');
-    newDiv.innerHTML = `<list-item content="${todo}"></list-item>`;
+    newDiv.innerHTML = `<list-item id="${todo.id}" content="${todo.content}"></list-item>`;
 
     const listItem = newDiv.querySelector('list-item');
     listItem.addEventListener('onItemRemoved', (event) => {
       const counter = this.shadowRoot.querySelector('.counter');
       counter.textContent = --this.counter;
-      this.todos = this.todos.filter(todo => todo !== event.detail);
-      localStorage.setItem('todos', this.todos);
+      this.todos = this.todos.filter(todo => todo.id !== event.detail);
+      this.saveTodosInLocalstorage(this.todos);
     })
 
     todoList.appendChild(newDiv);
+  }
+
+  saveTodosInLocalstorage(todos) {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }
+
+  getTodosFromLocalstorage() {
+    const todosAsString = localStorage.getItem("todos");
+    let todos = [];
+
+    if (todosAsString) {
+      todos = JSON.parse(todosAsString);
+    }
+
+    return todos;
   }
 
 }

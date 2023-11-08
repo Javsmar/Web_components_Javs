@@ -38,6 +38,7 @@ class ListItem extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.content = this.getAttribute('content') || 'Estudiar programación';
     this.buttonLabel = this.getAttribute('buttonLabel') || '❌';
+    this.id = this.getAttribute("id");
   }
 
   connectedCallback() {
@@ -50,7 +51,7 @@ class ListItem extends HTMLElement {
     const button = this.shadowRoot.querySelector('button');
     button.addEventListener('click', () => {
       const event = new CustomEvent("onItemRemoved", {
-        detail: this.content
+        detail: this.id
       });
       this.dispatchEvent(event);
       this.remove();
