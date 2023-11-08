@@ -43,12 +43,17 @@ class ListItem extends HTMLElement {
     this.content = this.getAttribute('content') || 'Estudiar programación';
     this.buttonLabel = this.getAttribute('buttonLabel') || '❌';
     this.id = this.getAttribute("id");
+    this.isCompleted = this.hasAttribute("isCompleted");
   }
 
   connectedCallback() {
     const template = templateElement.content.cloneNode(true);
     template.querySelector('span').textContent = this.content;
     template.querySelector('button').textContent = this.buttonLabel;
+    if (this.isCompleted) {
+      template.querySelector('input').setAttribute('checked', '');
+      template.querySelector('.list-item-wrapper').classList.add('checked');
+    }
 
     this.shadowRoot.appendChild(template);
 

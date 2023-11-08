@@ -42,7 +42,7 @@ class TodoApp extends HTMLElement {
 
     this.attachShadow({ mode: "open" });
     this.todos = this.getTodosFromLocalstorage();
-    this.counter = this.todos.length;
+    this.counter = this.todos.filter(todo => !todo.isCompleted).length;
   }
 
   connectedCallback() {
@@ -63,7 +63,7 @@ class TodoApp extends HTMLElement {
     this.todos.push({content: todo, id: id, isCompleted: false });
     this.incrementCounter()
 
-    this.addListItem({content: todo, id: id});
+    this.addListItem({content: todo, id: id, isCompleted: false });
     
     this.saveTodosInLocalstorage(this.todos);
   }
@@ -75,7 +75,7 @@ class TodoApp extends HTMLElement {
   addListItem(todo) {
     const todoList = this.shadowRoot.querySelector('.todo-list');
     const newDiv = document.createElement('div');
-    newDiv.innerHTML = `<list-item id="${todo.id}" content="${todo.content}"></list-item>`;
+    newDiv.innerHTML = `<list-item id="${todo.id}" content="${todo.content}" ${todo.isCompleted && 'isCompleted'}></list-item>`;
 
     const listItem = newDiv.querySelector('list-item');
     
